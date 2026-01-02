@@ -504,7 +504,15 @@ const AdminDashboard = () => {
                   >
                     {item.image && (
                       <img
-                        src={`http://localhost:5000${item.image}`}
+                        src={(() => {
+                          const imagePath = item.image;
+                          if (!imagePath) return '';
+                          if (imagePath.startsWith('http')) return imagePath;
+                          if (import.meta.env.DEV) return imagePath;
+                          const apiBase = import.meta.env.VITE_API_URL || '';
+                          const domain = apiBase.replace(/\/api\/?$/, '');
+                          return `${domain}${imagePath}`;
+                        })()}
                         alt={item.name}
                         className="w-full h-40 sm:h-48 object-cover rounded-lg mb-4"
                       />
