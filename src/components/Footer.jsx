@@ -84,6 +84,11 @@ const Footer = () => {
                   Contact
                 </Link>
               </li>
+              <li>
+                <Link to="/admin/login" className="text-gray-400 hover:text-primary-orange transition-colors">
+                  Admin Login
+                </Link>
+              </li>
             </ul>
           </div>
 
