@@ -42,6 +42,9 @@ const AdminDashboard = () => {
   });
   const [imageFile, setImageFile] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [offers, setOffers] = useState([]);
+  const [offerForm, setOfferForm] = useState({ title: '', description: '', isActive: true });
+  const [offerImage, setOfferImage] = useState(null);
   const [activeTab, setActiveTab] = useState('menu');
   const dashboardRef = useRef(null);
 
@@ -49,6 +52,7 @@ const AdminDashboard = () => {
     fetchMenuItems();
     fetchMessages();
     fetchCategories();
+    fetchOffers();
 
     gsap.fromTo(
       dashboardRef.current,
@@ -88,6 +92,55 @@ const AdminDashboard = () => {
       }
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const fetchOffers = async () => {
+    try {
+      const res = await api.get('/offers');
+      setOffers(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleOfferSubmit = async (e) => {
+    e.preventDefault();
+    const data = new FormData();
+    data.append('title', offerForm.title);
+    data.append('description', offerForm.description);
+    data.append('isActive', offerForm.isActive);
+    if (offerImage) {
+      data.append('image', offerImage);
+    }
+
+    try {
+      await api.post('/offers', data);
+      setOfferForm({ title: '', description: '', isActive: true });
+      setOfferImage(null);
+      fetchOffers();
+      alert('Offer added successfully!');
+    } catch (err) {
+      alert('Failed to add offer');
+    }
+  };
+
+  const handleDeleteOffer = async (id) => {
+    if (!window.confirm('Delete this active offer?')) return;
+    try {
+      await api.delete(`/offers/${id}`);
+      fetchOffers();
+    } catch (err) {
+      alert('Failed to delete offer');
+    }
+  };
+
+  const handleToggleOffer = async (id) => {
+    try {
+      await api.put(`/offers/${id}/toggle`);
+      fetchOffers();
+    } catch (err) {
+      alert('Failed to toggle offer status');
     }
   };
 
@@ -330,6 +383,15 @@ const AdminDashboard = () => {
               }`}
           >
             Messages <span className="bg-primary-orange text-white px-2 py-0.5 rounded-full text-xs">({messages.filter(m => !m.read).length})</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('offers')}
+            className={`px-4 sm:px-6 py-2 sm:py-3 font-semibold transition-colors whitespace-nowrap text-sm sm:text-base ${activeTab === 'offers'
+              ? 'text-primary-orange border-b-2 border-primary-orange'
+              : 'text-gray-400 hover:text-white'
+              }`}
+          >
+            Offers & Events
           </button>
         </div>
 
@@ -742,6 +804,107 @@ const AdminDashboard = () => {
                   <p className="text-lg">No messages yet.</p>
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* Offers Tab */}
+        {activeTab === 'offers' && (
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-display font-bold mb-6">Offers & Events</h2>
+
+            {/* Add Offer Form */}
+            <div className="bg-primary-black rounded-xl p-6 border border-gray-700 mb-8">
+              <h3 className="text-xl font-bold mb-4">Add New Offer</h3>
+              <form onSubmit={handleOfferSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-white mb-2">Title</label>
+                  <input
+                    type="text"
+                    required
+                    className="w-full px-4 py-2 bg-primary-dark border border-gray-700 rounded-lg text-white"
+                    value={offerForm.title}
+                    onChange={e => setOfferForm({ ...offerForm, title: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-white mb-2">Description</label>
+                  <textarea
+                    required
+                    className="w-full px-4 py-2 bg-primary-dark border border-gray-700 rounded-lg text-white"
+                    value={offerForm.description}
+                    onChange={e => setOfferForm({ ...offerForm, description: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-white mb-2">Image</label>
+                  <input
+                    type="file"
+                    required
+                    accept="image/*"
+                    className="w-full text-white"
+                    onChange={e => setOfferImage(e.target.files[0])}
+                  />
+                </div>
+                <div>
+                  <label className="flex items-center text-white cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={offerForm.isActive}
+                      onChange={e => setOfferForm({ ...offerForm, isActive: e.target.checked })}
+                      className="mr-2"
+                    />
+                    Active Logic
+                  </label>
+                </div>
+                <button type="submit" className="btn-primary">Add Offer</button>
+              </form>
+            </div>
+
+            {/* Offers List */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {offers.map(offer => (
+                <div key={offer._id} className="bg-primary-black rounded-xl border border-gray-700 overflow-hidden relative group">
+                  <div className="h-48 overflow-hidden">
+                    <img
+                      src={(() => {
+                        const imagePath = offer.image;
+                        if (!imagePath) return '';
+                        if (imagePath.startsWith('http')) return imagePath;
+                        if (import.meta.env.DEV) return imagePath;
+                        const apiBase = import.meta.env.VITE_API_URL || '';
+                        const domain = apiBase.replace(/\/api\/?$/, '');
+                        return `${domain}${imagePath}`;
+                      })()}
+                      alt={offer.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="text-xl font-bold">{offer.title}</h3>
+                      <span className={`px-2 py-1 rounded text-xs font-bold ${offer.isActive ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`}>
+                        {offer.isActive ? 'ACTIVE' : 'INACTIVE'}
+                      </span>
+                    </div>
+                    <p className="text-gray-400 text-sm mb-4">{offer.description}</p>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleToggleOffer(offer._id)}
+                        className="flex-1 btn-secondary text-sm py-2"
+                      >
+                        {offer.isActive ? 'Deactivate' : 'Activate'}
+                      </button>
+                      <button
+                        onClick={() => handleDeleteOffer(offer._id)}
+                        className="flex-1 bg-red-600/20 text-red-500 hover:bg-red-600/30 rounded-lg py-2 transition text-sm font-semibold"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}

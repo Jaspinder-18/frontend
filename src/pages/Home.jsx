@@ -1,5 +1,6 @@
 // ... imports
 import { getImageUrl } from '../utils/imageHelper';
+import OfferPopup from '../components/OfferPopup';
 
 // ... inside map
 {
@@ -10,10 +11,10 @@ import { getImageUrl } from '../utils/imageHelper';
       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
     />
   ) : (
-  <div className="w-full h-full bg-gradient-to-br from-primary-orange to-primary-red flex items-center justify-center">
-    <span className="text-4xl">🍽️</span>
-  </div>
-)
+    <div className="w-full h-full bg-gradient-to-br from-primary-orange to-primary-red flex items-center justify-center">
+      <span className="text-4xl">🍽️</span>
+    </div>
+  )
 }
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                     <div className="absolute bottom-4 left-4 right-4">
