@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 
 const AuthContext = createContext();
 
@@ -18,8 +18,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
     if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      // Optionally verify token with backend
+      // Token will be added by api interceptor
       setAdmin({ token });
     }
     setLoading(false);
@@ -27,10 +26,9 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('/api/auth/login', { email, password });
+      const response = await api.post('/auth/login', { email, password });
       const { token } = response.data;
       localStorage.setItem('adminToken', token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       setAdmin({ token });
       return { success: true };
     } catch (error) {
@@ -43,7 +41,7 @@ export const AuthProvider = ({ children }) => {
 
   const resetPassword = async (email, dob, newPassword) => {
     try {
-      const response = await axios.post('/api/auth/reset-password', { email, dob, newPassword });
+      const response = await api.post('/auth/reset-password', { email, dob, newPassword });
       return { success: true, message: response.data.message };
     } catch (error) {
       return {
@@ -55,7 +53,6 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('adminToken');
-    delete axios.defaults.headers.common['Authorization'];
     setAdmin(null);
   };
 
