@@ -243,6 +243,17 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleMessageDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this message?')) return;
+    try {
+      await api.delete(`/contact/${id}`);
+      setMessages(messages.filter(m => m._id !== id));
+    } catch (err) {
+      alert('Error deleting message');
+      console.error(err);
+    }
+  };
+
   // Content Handlers
   const handleContentChange = (section, field, value) => {
     setContentForm(prev => ({
@@ -708,6 +719,14 @@ const AdminDashboard = () => {
                     </span>
                   </div>
                   <p className="text-gray-300 mt-4 text-sm sm:text-base">{message.message}</p>
+                  <div className="mt-4 flex justify-end">
+                    <button
+                      onClick={() => handleMessageDelete(message._id)}
+                      className="text-red-400 hover:text-red-300 text-sm font-semibold transition-colors"
+                    >
+                      Delete Message
+                    </button>
+                  </div>
                 </div>
               ))}
               {messages.length === 0 && (
