@@ -99,6 +99,12 @@ const Contact = () => {
 
     try {
       console.log('Submitting contact form:', formData);
+      // Ensure we hit the /api/contact endpoint
+      // If VITE_API_URL is root (https://server.com), we need /api/contact
+      // If VITE_API_URL includes /api, this might double up, but usually env var is root.
+      // Safest is to rely on uniform contract.
+      // The previous error showed 404, implying it didn't find the route.
+      console.log('Submitting contact form:', formData);
       const response = await api.post('/contact', formData);
       console.log('Contact form success:', response.data);
       setSuccess(true);
