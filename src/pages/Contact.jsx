@@ -105,7 +105,8 @@ const Contact = () => {
       // Safest is to rely on uniform contract.
       // The previous error showed 404, implying it didn't find the route.
       console.log('Submitting contact form:', formData);
-      const response = await api.post('/contact', formData);
+      // HARDCODE URL TO DEBUG ENV VAR ISSUE
+      const response = await api.post('https://eatandout-server.onrender.com/api/contact', formData);
       console.log('Contact form success:', response.data);
       setSuccess(true);
       setFormData({ name: '', email: '', phone: '', message: '' });
