@@ -1,3 +1,10 @@
+import { useState, useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import api from '../utils/api';
+
+gsap.registerPlugin(ScrollTrigger);
+
 // Helper to get image URL
 const getImageUrl = (imagePath) => {
   if (!imagePath) return '';
