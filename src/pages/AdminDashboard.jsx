@@ -437,7 +437,8 @@ const AdminDashboard = () => {
                         value={formData.name}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-2 bg-primary-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-primary-orange"
+                        required
+                        className="w-full px-4 py-2 bg-dark-card border border-gray-700 rounded-lg text-white focus:outline-none focus:border-primary"
                       />
                     </div>
                     <div>
@@ -450,7 +451,8 @@ const AdminDashboard = () => {
                         required
                         min="0"
                         step="0.01"
-                        className="w-full px-4 py-2 bg-primary-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-primary-orange"
+                        step="0.01"
+                        className="w-full px-4 py-2 bg-dark-card border border-gray-700 rounded-lg text-white focus:outline-none focus:border-primary"
                       />
                     </div>
                   </div>
@@ -461,8 +463,9 @@ const AdminDashboard = () => {
                       value={formData.description}
                       onChange={handleInputChange}
                       required
+                      required
                       rows="3"
-                      className="w-full px-4 py-2 bg-primary-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-primary-orange"
+                      className="w-full px-4 py-2 bg-dark-card border border-gray-700 rounded-lg text-white focus:outline-none focus:border-primary"
                     />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -473,7 +476,8 @@ const AdminDashboard = () => {
                         value={formData.category}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-3 sm:px-4 py-2 bg-primary-dark border border-gray-700 rounded-lg text-white text-sm sm:text-base focus:outline-none focus:border-primary-orange"
+                        required
+                        className="w-full px-3 sm:px-4 py-2 bg-dark-card border border-gray-700 rounded-lg text-white text-sm sm:text-base focus:outline-none focus:border-primary"
                       >
                         {categories.filter(cat => cat.isActive).length > 0 ? (
                           categories
@@ -496,7 +500,7 @@ const AdminDashboard = () => {
                         type="file"
                         accept="image/*"
                         onChange={(e) => setImageFile(e.target.files[0])}
-                        className="w-full px-3 sm:px-4 py-2 bg-primary-dark border border-gray-700 rounded-lg text-white text-xs sm:text-sm focus:outline-none focus:border-primary-orange file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-primary-orange file:text-white hover:file:bg-primary-red"
+                        className="w-full px-3 sm:px-4 py-2 bg-dark-card border border-gray-700 rounded-lg text-white text-xs sm:text-sm focus:outline-none focus:border-primary file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-dark hover:file:bg-primary-light"
                       />
                     </div>
                   </div>
@@ -651,7 +655,7 @@ const AdminDashboard = () => {
                         onChange={(e) => setCategoryFormData({ ...categoryFormData, displayName: e.target.value })}
                         required
                         placeholder="e.g., Punjabi, Chinese"
-                        className="w-full px-3 sm:px-4 py-2 bg-primary-dark border border-gray-700 rounded-lg text-white text-sm sm:text-base focus:outline-none focus:border-primary-orange"
+                        className="w-full px-3 sm:px-4 py-2 bg-dark-card border border-gray-700 rounded-lg text-white text-sm sm:text-base focus:outline-none focus:border-primary"
                       />
                     </div>
                     <div>
@@ -662,7 +666,7 @@ const AdminDashboard = () => {
                         value={categoryFormData.order}
                         onChange={(e) => setCategoryFormData({ ...categoryFormData, order: parseInt(e.target.value) || 0 })}
                         min="0"
-                        className="w-full px-3 sm:px-4 py-2 bg-primary-dark border border-gray-700 rounded-lg text-white text-sm sm:text-base focus:outline-none focus:border-primary-orange"
+                        className="w-full px-3 sm:px-4 py-2 bg-dark-card border border-gray-700 rounded-lg text-white text-sm sm:text-base focus:outline-none focus:border-primary"
                       />
                     </div>
                   </div>
@@ -674,7 +678,7 @@ const AdminDashboard = () => {
                       onChange={(e) => setCategoryFormData({ ...categoryFormData, description: e.target.value })}
                       rows="2"
                       placeholder="Optional description"
-                      className="w-full px-3 sm:px-4 py-2 bg-primary-dark border border-gray-700 rounded-lg text-white text-sm sm:text-base focus:outline-none focus:border-primary-orange resize-none"
+                      className="w-full px-3 sm:px-4 py-2 bg-dark-card border border-gray-700 rounded-lg text-white text-sm sm:text-base focus:outline-none focus:border-primary resize-none"
                     />
                   </div>
                   <div>
@@ -822,7 +826,7 @@ const AdminDashboard = () => {
                   <input
                     type="text"
                     required
-                    className="w-full px-4 py-2 bg-primary-dark border border-gray-700 rounded-lg text-white"
+                    className="w-full px-4 py-2 bg-dark-card border border-gray-700 rounded-lg text-white focus:outline-none focus:border-primary"
                     value={offerForm.title}
                     onChange={e => setOfferForm({ ...offerForm, title: e.target.value })}
                   />
@@ -831,7 +835,7 @@ const AdminDashboard = () => {
                   <label className="block text-white mb-2">Description</label>
                   <textarea
                     required
-                    className="w-full px-4 py-2 bg-primary-dark border border-gray-700 rounded-lg text-white"
+                    className="w-full px-4 py-2 bg-dark-card border border-gray-700 rounded-lg text-white focus:outline-none focus:border-primary"
                     value={offerForm.description}
                     onChange={e => setOfferForm({ ...offerForm, description: e.target.value })}
                   />
@@ -995,11 +999,12 @@ const AdminDashboard = () => {
                       <label className="block text-gray-400 text-sm mb-1 capitalize">
                         {field.replace(/([A-Z])/g, ' $1').trim()}
                       </label>
+                      </label>
                       <input
                         type="text"
                         value={value}
                         onChange={(e) => handleContentChange(activeContentSection, field, e.target.value)}
-                        className="w-full px-4 py-2 bg-primary-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-primary-orange"
+                        className="w-full px-4 py-2 bg-dark-card border border-gray-700 rounded-lg text-white focus:outline-none focus:border-primary"
                       />
                     </div>
                   )
@@ -1009,40 +1014,45 @@ const AdminDashboard = () => {
                 <button type="submit" className="btn-primary px-8">Save Changes</button>
               </div>
             </form>
-          </div>
-        )}
-
-        {/* Floating Add Buttons */}
-        {!showForm && !showCategoryForm && activeTab === 'menu' && (
-          <button
-            onClick={() => {
-              resetForm();
-              setShowForm(true);
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            className="fixed bottom-6 right-6 z-50 bg-primary-orange hover:bg-primary-red text-white rounded-full p-4 sm:p-5 shadow-2xl hover:shadow-primary-orange/50 transition-all duration-300 transform hover:scale-110 flex items-center justify-center group"
-            aria-label="Add new menu item"
-          >
-            <span className="text-2xl sm:text-3xl font-bold group-hover:rotate-90 transition-transform duration-300">+</span>
-            <span className="ml-2 text-sm sm:text-base font-semibold hidden sm:inline">Add Item</span>
-          </button>
-        )}
-        {!showCategoryForm && activeTab === 'categories' && (
-          <button
-            onClick={() => {
-              resetCategoryForm();
-              setShowCategoryForm(true);
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            className="fixed bottom-6 right-6 z-50 bg-primary-orange hover:bg-primary-red text-white rounded-full p-4 sm:p-5 shadow-2xl hover:shadow-primary-orange/50 transition-all duration-300 transform hover:scale-110 flex items-center justify-center group"
-            aria-label="Add new category"
-          >
-            <span className="text-2xl sm:text-3xl font-bold group-hover:rotate-90 transition-transform duration-300">+</span>
-            <span className="ml-2 text-sm sm:text-base font-semibold hidden sm:inline">Add Category</span>
-          </button>
-        )}
-      </div>
     </div>
+  )
+}
+
+{/* Floating Add Buttons */ }
+{
+  !showForm && !showCategoryForm && activeTab === 'menu' && (
+    <button
+      onClick={() => {
+        resetForm();
+        setShowForm(true);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }}
+      className="fixed bottom-6 right-6 z-50 bg-primary-orange hover:bg-primary-red text-white rounded-full p-4 sm:p-5 shadow-2xl hover:shadow-primary-orange/50 transition-all duration-300 transform hover:scale-110 flex items-center justify-center group"
+      aria-label="Add new menu item"
+    >
+      <span className="text-2xl sm:text-3xl font-bold group-hover:rotate-90 transition-transform duration-300">+</span>
+      <span className="ml-2 text-sm sm:text-base font-semibold hidden sm:inline">Add Item</span>
+    </button>
+  )
+}
+{
+  !showCategoryForm && activeTab === 'categories' && (
+    <button
+      onClick={() => {
+        resetCategoryForm();
+        setShowCategoryForm(true);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }}
+      className="fixed bottom-6 right-6 z-50 bg-primary-orange hover:bg-primary-red text-white rounded-full p-4 sm:p-5 shadow-2xl hover:shadow-primary-orange/50 transition-all duration-300 transform hover:scale-110 flex items-center justify-center group"
+      aria-label="Add new category"
+    >
+      <span className="text-2xl sm:text-3xl font-bold group-hover:rotate-90 transition-transform duration-300">+</span>
+      <span className="ml-2 text-sm sm:text-base font-semibold hidden sm:inline">Add Category</span>
+    </button>
+  )
+}
+      </div >
+    </div >
   );
 };
 
