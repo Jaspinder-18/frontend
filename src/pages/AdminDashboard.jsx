@@ -451,7 +451,7 @@ const AdminDashboard = () => {
                         required
                         min="0"
                         step="0.01"
-                        step="0.01"
+
                         className="w-full px-4 py-2 bg-dark-card border border-gray-700 rounded-lg text-white focus:outline-none focus:border-primary"
                       />
                     </div>
@@ -463,7 +463,7 @@ const AdminDashboard = () => {
                       value={formData.description}
                       onChange={handleInputChange}
                       required
-                      required
+
                       rows="3"
                       className="w-full px-4 py-2 bg-dark-card border border-gray-700 rounded-lg text-white focus:outline-none focus:border-primary"
                     />
@@ -476,7 +476,7 @@ const AdminDashboard = () => {
                         value={formData.category}
                         onChange={handleInputChange}
                         required
-                        required
+
                         className="w-full px-3 sm:px-4 py-2 bg-dark-card border border-gray-700 rounded-lg text-white text-sm sm:text-base focus:outline-none focus:border-primary"
                       >
                         {categories.filter(cat => cat.isActive).length > 0 ? (
@@ -999,7 +999,7 @@ const AdminDashboard = () => {
                       <label className="block text-gray-400 text-sm mb-1 capitalize">
                         {field.replace(/([A-Z])/g, ' $1').trim()}
                       </label>
-                      </label>
+
                       <input
                         type="text"
                         value={value}
@@ -1014,43 +1014,43 @@ const AdminDashboard = () => {
                 <button type="submit" className="btn-primary px-8">Save Changes</button>
               </div>
             </form>
-    </div>
-  )
-}
+          </div>
+        )
+        }
 
-{/* Floating Add Buttons */ }
-{
-  !showForm && !showCategoryForm && activeTab === 'menu' && (
-    <button
-      onClick={() => {
-        resetForm();
-        setShowForm(true);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }}
-      className="fixed bottom-6 right-6 z-50 bg-primary-orange hover:bg-primary-red text-white rounded-full p-4 sm:p-5 shadow-2xl hover:shadow-primary-orange/50 transition-all duration-300 transform hover:scale-110 flex items-center justify-center group"
-      aria-label="Add new menu item"
-    >
-      <span className="text-2xl sm:text-3xl font-bold group-hover:rotate-90 transition-transform duration-300">+</span>
-      <span className="ml-2 text-sm sm:text-base font-semibold hidden sm:inline">Add Item</span>
-    </button>
-  )
-}
-{
-  !showCategoryForm && activeTab === 'categories' && (
-    <button
-      onClick={() => {
-        resetCategoryForm();
-        setShowCategoryForm(true);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }}
-      className="fixed bottom-6 right-6 z-50 bg-primary-orange hover:bg-primary-red text-white rounded-full p-4 sm:p-5 shadow-2xl hover:shadow-primary-orange/50 transition-all duration-300 transform hover:scale-110 flex items-center justify-center group"
-      aria-label="Add new category"
-    >
-      <span className="text-2xl sm:text-3xl font-bold group-hover:rotate-90 transition-transform duration-300">+</span>
-      <span className="ml-2 text-sm sm:text-base font-semibold hidden sm:inline">Add Category</span>
-    </button>
-  )
-}
+        {/* Floating Add Buttons */}
+        {
+          !showForm && !showCategoryForm && activeTab === 'menu' && (
+            <button
+              onClick={() => {
+                resetForm();
+                setShowForm(true);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="fixed bottom-6 right-6 z-50 bg-primary-orange hover:bg-primary-red text-white rounded-full p-4 sm:p-5 shadow-2xl hover:shadow-primary-orange/50 transition-all duration-300 transform hover:scale-110 flex items-center justify-center group"
+              aria-label="Add new menu item"
+            >
+              <span className="text-2xl sm:text-3xl font-bold group-hover:rotate-90 transition-transform duration-300">+</span>
+              <span className="ml-2 text-sm sm:text-base font-semibold hidden sm:inline">Add Item</span>
+            </button>
+          )
+        }
+        {
+          !showCategoryForm && activeTab === 'categories' && (
+            <button
+              onClick={() => {
+                resetCategoryForm();
+                setShowCategoryForm(true);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="fixed bottom-6 right-6 z-50 bg-primary-orange hover:bg-primary-red text-white rounded-full p-4 sm:p-5 shadow-2xl hover:shadow-primary-orange/50 transition-all duration-300 transform hover:scale-110 flex items-center justify-center group"
+              aria-label="Add new category"
+            >
+              <span className="text-2xl sm:text-3xl font-bold group-hover:rotate-90 transition-transform duration-300">+</span>
+              <span className="ml-2 text-sm sm:text-base font-semibold hidden sm:inline">Add Category</span>
+            </button>
+          )
+        }
       </div >
     </div >
   );
