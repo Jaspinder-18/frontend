@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useCart } from '../context/CartContext';
 import api from '../utils/api';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -23,6 +24,7 @@ const getImageUrl = (imagePath) => {
 };
 
 const Menu = () => {
+  const { addToCart } = useCart();
   const [menuItems, setMenuItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -163,8 +165,8 @@ const Menu = () => {
             <button
               onClick={() => setSelectedCategory('All')}
               className={`px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold text-sm sm:text-base transition-all duration-300 transform hover:scale-105 ${selectedCategory === 'All'
-                  ? 'bg-primary-orange text-white shadow-lg'
-                  : 'bg-primary-black text-gray-300 hover:bg-primary-black/80 border border-gray-700'
+                ? 'bg-primary-orange text-white shadow-lg'
+                : 'bg-primary-black text-gray-300 hover:bg-primary-black/80 border border-gray-700'
                 }`}
             >
               All
@@ -176,8 +178,8 @@ const Menu = () => {
                   key={category._id || category.displayName}
                   onClick={() => setSelectedCategory(category.displayName)}
                   className={`px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold text-sm sm:text-base transition-all duration-300 transform hover:scale-105 ${selectedCategory === category.displayName
-                      ? 'bg-primary-orange text-white shadow-lg'
-                      : 'bg-primary-black text-gray-300 hover:bg-primary-black/80 border border-gray-700'
+                    ? 'bg-primary-orange text-white shadow-lg'
+                    : 'bg-primary-black text-gray-300 hover:bg-primary-black/80 border border-gray-700'
                     }`}
                 >
                   {category.displayName}
@@ -233,11 +235,22 @@ const Menu = () => {
                       <span className="px-3 py-1 bg-primary-orange/20 text-primary-orange rounded-full text-xs font-medium">
                         {item.category}
                       </span>
-                      {item.featured && (
-                        <span className="px-3 py-1 bg-primary-red/20 text-primary-red rounded-full text-xs font-medium">
-                          ⭐ Featured
-                        </span>
-                      )}
+                      <div className="flex items-center gap-2">
+                        {item.featured && (
+                          <span className="px-3 py-1 bg-primary-red/20 text-primary-red rounded-full text-xs font-medium">
+                            ⭐ Featured
+                          </span>
+                        )}
+                        <button
+                          onClick={() => addToCart(item)}
+                          className="p-2 bg-primary rounded-full text-dark hover:bg-primary-light transition-colors transform active:scale-95"
+                          title="Add to Cart"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

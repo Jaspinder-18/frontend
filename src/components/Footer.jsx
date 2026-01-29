@@ -1,118 +1,126 @@
 import { Link } from 'react-router-dom';
 import { useContent } from '../context/ContentContext';
-import { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { motion } from 'framer-motion';
 
 const Footer = () => {
   const { get } = useContent();
-  const footerRef = useRef(null);
-  const contentRef = useRef(null);
 
-  useEffect(() => {
-    if (contentRef.current && footerRef.current) {
-      gsap.fromTo(
-        contentRef.current,
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          scrollTrigger: {
-            trigger: footerRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-          }
-        }
-      );
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
     }
+  };
 
-    return () => {
-      ScrollTrigger.getAll().forEach(trigger => {
-        if (trigger.vars?.trigger === footerRef.current) {
-          trigger.kill();
-        }
-      });
-    };
-  }, []);
+  const item = {
+    hidden: { y: 20, opacity: 0 },
+    show: { y: 0, opacity: 1 }
+  };
 
   return (
-    <footer ref={footerRef} className="bg-primary-black border-t border-gray-800">
-      <div ref={contentRef} className="container-custom section-padding">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          {/* About Section */}
-          <div>
-            <h3 className="text-2xl font-display font-bold text-primary-orange mb-4">
-              {get('home', 'heroTitle1')} & {get('home', 'heroTitle3')}
+    <footer className="bg-dark pt-16 md:pt-24 border-t border-white/5 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2" />
+
+      <div className="container-custom section-padding relative z-10">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12"
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          {/* Brand Section */}
+          <motion.div variants={item} className="space-y-6">
+            <h3 className="text-3xl font-display font-bold text-gradient">
+              Eat & Out
             </h3>
-            <p className="text-gray-400 mb-4">
-              {get('home', 'heroDescription')}
+            <p className="text-gray-400 leading-relaxed">
+              Experience the finest culinary journey with sustainable ingredients and premium service.
             </p>
-            <p className="text-primary-cream font-semibold">
-              {get('home', 'heroSubtitle')}
-            </p>
-          </div>
+            <div className="flex space-x-4">
+              {/* Social placeholders */}
+              {['facebook', 'instagram', 'twitter'].map(social => (
+                <a key={social} href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary hover:text-dark transition-all duration-300">
+                  <span className="sr-only">{social}</span>
+                  <div className="w-4 h-4 bg-current" />
+                </a>
+              ))}
+            </div>
+          </motion.div>
 
           {/* Quick Links */}
-          <div>
-            <h4 className="text-xl font-display font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/" className="text-gray-400 hover:text-primary-orange transition-colors">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link to="/menu" className="text-gray-400 hover:text-primary-orange transition-colors">
-                  Menu
-                </Link>
-              </li>
-              <li>
-                <Link to="/about" className="text-gray-400 hover:text-primary-orange transition-colors">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/gallery" className="text-gray-400 hover:text-primary-orange transition-colors">
-                  Gallery
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-gray-400 hover:text-primary-orange transition-colors">
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link to="/admin/login" className="text-gray-400 hover:text-primary-orange transition-colors">
-                  Admin Login
-                </Link>
-              </li>
+          <motion.div variants={item}>
+            <h4 className="text-xl font-display font-semibold mb-6 text-white">Explore</h4>
+            <ul className="space-y-4">
+              {['Home', 'Menu', 'About', 'Gallery', 'Contact'].map((link) => (
+                <li key={link}>
+                  <Link
+                    to={link === 'Home' ? '/' : `/${link.toLowerCase()}`}
+                    className="text-gray-400 hover:text-primary transition-colors flex items-center group"
+                  >
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-300" />
+                    {link}
+                  </Link>
+                </li>
+              ))}
             </ul>
-          </div>
+          </motion.div>
 
           {/* Contact Info */}
-          <div>
-            <h4 className="text-xl font-display font-semibold mb-4">Contact Us</h4>
-            <div className="space-y-3 text-gray-400">
-              <p>
-                <span className="text-primary-orange">Location:</span><br />
-                {get('contact', 'addressLine1')}<br />
-                {get('contact', 'addressLine2')}<br />
-                {get('contact', 'addressLine3')}<br />
-                {get('contact', 'addressLine4')}
+          <motion.div variants={item}>
+            <h4 className="text-xl font-display font-semibold mb-6 text-white">Visit Us</h4>
+            <div className="space-y-4 text-gray-400">
+              <p className="flex items-start">
+                <span className="text-primary mr-3 mt-1">📍</span>
+                <span>
+                  {get('contact', 'addressLine1') || '123 Premium Street,'}<br />
+                  {get('contact', 'addressLine2') || 'Gourmet District,'}<br />
+                  {get('contact', 'addressLine3') || 'Mumbai, India'}
+                </span>
               </p>
-              <p>
-                <span className="text-primary-orange">Phone:</span> {get('contact', 'phone')}
+              <p className="flex items-center">
+                <span className="text-primary mr-3">📞</span>
+                {get('contact', 'phone') || '+91 98765 43210'}
+              </p>
+              <p className="flex items-center">
+                <span className="text-primary mr-3">✉️</span>
+                info@eatandout.com
               </p>
             </div>
-          </div>
-        </div>
+          </motion.div>
 
-        <div className="border-t border-gray-800 pt-8 text-center text-gray-500">
-          <p>&copy; {new Date().getFullYear()} Eat & Out. All rights reserved.</p>
-        </div>
+          {/* Opening Hours */}
+          <motion.div variants={item}>
+            <h4 className="text-xl font-display font-semibold mb-6 text-white">Opening Hours</h4>
+            <ul className="space-y-4 text-gray-400">
+              <li className="flex justify-between">
+                <span>Mon - Fri</span>
+                <span className="text-white">10:00 AM - 11:00 PM</span>
+              </li>
+              <li className="flex justify-between">
+                <span>Sat - Sun</span>
+                <span className="text-white">09:00 AM - 12:00 AM</span>
+              </li>
+            </ul>
+          </motion.div>
+        </motion.div>
+
+        <motion.div
+          className="border-t border-white/5 pt-8 text-center"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          viewport={{ once: true }}
+        >
+          <p className="text-gray-500 text-sm">
+            &copy; {new Date().getFullYear()} Eat & Out via Jaspinder-18. All rights reserved.
+            <Link to="/admin/login" className="ml-4 hover:text-primary">Admin</Link>
+          </p>
+        </motion.div>
       </div>
     </footer>
   );
