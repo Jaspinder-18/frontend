@@ -1,3 +1,5 @@
+/** @type {import('tailwindcss').Config} */
+export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -28,7 +30,7 @@
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         display: ['Poppins', 'sans-serif'],
-        handwriting: ['Nothing You Could Do', 'cursive'] // Add if needed, or remove
+        handwriting: ['Nothing You Could Do', 'cursive']
       },
       animation: {
         'slow-spin': 'spin 10s linear infinite',
@@ -37,4 +39,3 @@
   },
   plugins: [],
 }
-
