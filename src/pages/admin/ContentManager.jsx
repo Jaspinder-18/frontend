@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useContent } from '../../context/ContentContext';
 import {
     Save,
@@ -9,8 +9,74 @@ import {
     Share2,
     Loader2,
     CheckCircle2,
-    AlertCircle
+    AlertCircle,
+    Upload,
+    X,
+    Plus
 } from 'lucide-react';
+import api from '../../utils/api';
+import { getImageUrl } from '../../utils/imageHelper';
+
+const ImageUploadField = ({ label, currentImage, onUpload, folder = '/eat-and-out/' }) => {
+    const [uploading, setUploading] = useState(false);
+    const fileInputRef = useRef(null);
+
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setUploading(true);
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('folder', folder);
+
+        try {
+            const res = await api.post('/upload', formData);
+            onUpload(res.data.filePath);
+        } catch (err) {
+            console.error('Upload failed:', err);
+            alert('Image upload failed. Please try again.');
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    return (
+        <div className="space-y-3">
+            <label className="text-sm font-medium text-gray-400">{label}</label>
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                <div className="relative w-32 h-20 rounded-lg overflow-hidden border border-gray-700 bg-dark">
+                    {currentImage ? (
+                        <img src={getImageUrl(currentImage)} alt={label} className="w-full h-full object-cover" />
+                    ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-600">
+                            <ImageIcon size={24} />
+                        </div>
+                    )}
+                </div>
+                <div className="flex flex-col gap-2">
+                    <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploading}
+                        className="flex items-center gap-2 px-4 py-2 bg-dark-lighter hover:bg-white/10 border border-gray-700 rounded-lg text-sm transition-all"
+                    >
+                        {uploading ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
+                        {uploading ? 'Uploading...' : 'Change Image'}
+                    </button>
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        className="hidden"
+                        accept="image/*"
+                    />
+                    <p className="text-[10px] text-gray-500 max-w-[200px]">Recommended: High quality PNG/JPG (Max 5MB)</p>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 const ContentManager = () => {
     const { content, updateContent, loading } = useContent();
@@ -49,6 +115,30 @@ const ContentManager = () => {
         }));
     };
 
+    const handleGalleryUpload = (newUrl) => {
+        setLocalContent(prev => ({
+            ...prev,
+            gallery: {
+                ...prev.gallery,
+                images: [...(prev.gallery.images || []), newUrl]
+            }
+        }));
+    };
+
+    const removeGalleryImage = (index) => {
+        setLocalContent(prev => {
+            const newImages = [...prev.gallery.images];
+            newImages.splice(index, 1);
+            return {
+                ...prev,
+                gallery: {
+                    ...prev.gallery,
+                    images: newImages
+                }
+            };
+        });
+    };
+
     if (loading || !localContent) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px]">
@@ -74,7 +164,7 @@ const ContentManager = () => {
                     <h2 className="text-3xl font-display font-bold text-white">
                         Website <span className="text-primary">Content</span> Editor
                     </h2>
-                    <p className="text-gray-400 mt-1">Customize all website text and information dynamically.</p>
+                    <p className="text-gray-400 mt-1">Customize all website text and images dynamically.</p>
                 </div>
 
                 <div className="flex items-center gap-4">
@@ -105,8 +195,8 @@ const ContentManager = () => {
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
                                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 whitespace-nowrap ${activeTab === tab.id
-                                    ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                                        ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                                        : 'text-gray-400 hover:bg-white/5 hover:text-white'
                                     }`}
                             >
                                 {tab.icon}
@@ -126,32 +216,45 @@ const ContentManager = () => {
                                     Hero Section Content
                                 </h3>
 
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                                    <ImageUploadField
+                                        label="Hero Background Image"
+                                        currentImage={localContent.home?.heroBackgroundImage}
+                                        onUpload={(url) => handleChange('home', 'heroBackgroundImage', url)}
+                                    />
+                                    <ImageUploadField
+                                        label="About Section Preview Image"
+                                        currentImage={localContent.home?.aboutSectionImage}
+                                        onUpload={(url) => handleChange('home', 'aboutSectionImage', url)}
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-gray-800/50">
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-400">Hero Title 1 (e.g. "Eat")</label>
+                                        <label className="text-sm font-medium text-gray-400">Hero Title 1</label>
                                         <input
                                             type="text"
                                             value={localContent.home?.heroTitle1 || ''}
                                             onChange={e => handleChange('home', 'heroTitle1', e.target.value)}
-                                            className="w-full bg-dark-lighter border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                            className="w-full bg-dark-lighter border border-gray-700 rounded-lg px-4 py-2.5 text-white"
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-400">Hero Title 2 (e.g. "&")</label>
+                                        <label className="text-sm font-medium text-gray-400">Hero Title 2</label>
                                         <input
                                             type="text"
                                             value={localContent.home?.heroTitle2 || ''}
                                             onChange={e => handleChange('home', 'heroTitle2', e.target.value)}
-                                            className="w-full bg-dark-lighter border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                            className="w-full bg-dark-lighter border border-gray-700 rounded-lg px-4 py-2.5 text-white"
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-400">Hero Title 3 (e.g. "Out")</label>
+                                        <label className="text-sm font-medium text-gray-400">Hero Title 3</label>
                                         <input
                                             type="text"
                                             value={localContent.home?.heroTitle3 || ''}
                                             onChange={e => handleChange('home', 'heroTitle3', e.target.value)}
-                                            className="w-full bg-dark-lighter border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                            className="w-full bg-dark-lighter border border-gray-700 rounded-lg px-4 py-2.5 text-white"
                                         />
                                     </div>
                                 </div>
@@ -162,7 +265,7 @@ const ContentManager = () => {
                                         type="text"
                                         value={localContent.home?.heroSubtitle || ''}
                                         onChange={e => handleChange('home', 'heroSubtitle', e.target.value)}
-                                        className="w-full bg-dark-lighter border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                        className="w-full bg-dark-lighter border border-gray-700 rounded-lg px-4 py-2.5 text-white"
                                     />
                                 </div>
 
@@ -172,7 +275,7 @@ const ContentManager = () => {
                                         rows="3"
                                         value={localContent.home?.heroDescription || ''}
                                         onChange={e => handleChange('home', 'heroDescription', e.target.value)}
-                                        className="w-full bg-dark-lighter border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none"
+                                        className="w-full bg-dark-lighter border border-gray-700 rounded-lg px-4 py-2.5 text-white resize-none"
                                     />
                                 </div>
 
@@ -183,7 +286,7 @@ const ContentManager = () => {
                                             type="text"
                                             value={localContent.home?.ctaButton1 || ''}
                                             onChange={e => handleChange('home', 'ctaButton1', e.target.value)}
-                                            className="w-full bg-dark-lighter border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                            className="w-full bg-dark-lighter border border-gray-700 rounded-lg px-4 py-2.5 text-white"
                                         />
                                     </div>
                                     <div className="space-y-2">
@@ -192,7 +295,7 @@ const ContentManager = () => {
                                             type="text"
                                             value={localContent.home?.ctaButton2 || ''}
                                             onChange={e => handleChange('home', 'ctaButton2', e.target.value)}
-                                            className="w-full bg-dark-lighter border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                            className="w-full bg-dark-lighter border border-gray-700 rounded-lg px-4 py-2.5 text-white"
                                         />
                                     </div>
                                 </div>
@@ -201,7 +304,7 @@ const ContentManager = () => {
                                     <h4 className="font-semibold text-white">Popular Dishes Section</h4>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="space-y-2">
-                                            <label className="text-sm font-medium text-gray-400">Section Title (e.g. "Popular")</label>
+                                            <label className="text-sm font-medium text-gray-400">Section Title</label>
                                             <input
                                                 type="text"
                                                 value={localContent.home?.popularDishesTitle || ''}
@@ -210,7 +313,7 @@ const ContentManager = () => {
                                             />
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-sm font-medium text-gray-400">Section Subtitle (e.g. "Dishes")</label>
+                                            <label className="text-sm font-medium text-gray-400">Section Subtitle</label>
                                             <input
                                                 type="text"
                                                 value={localContent.home?.popularDishesSubtitle || ''}
@@ -241,7 +344,7 @@ const ContentManager = () => {
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-400">Page Title (e.g. "Our")</label>
+                                        <label className="text-sm font-medium text-gray-400">Page Title</label>
                                         <input
                                             type="text"
                                             value={localContent.menu?.title || ''}
@@ -250,7 +353,7 @@ const ContentManager = () => {
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-400">Page Subtitle (e.g. "Menu")</label>
+                                        <label className="text-sm font-medium text-gray-400">Page Subtitle</label>
                                         <input
                                             type="text"
                                             value={localContent.menu?.subtitle || ''}
@@ -279,7 +382,15 @@ const ContentManager = () => {
                                     About Page Content
                                 </h3>
 
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="mb-8">
+                                    <ImageUploadField
+                                        label="Main About Image"
+                                        currentImage={localContent.about?.image}
+                                        onUpload={(url) => handleChange('about', 'image', url)}
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-gray-800/50">
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-400">Main Title</label>
                                         <input
@@ -389,10 +500,50 @@ const ContentManager = () => {
                                     />
                                 </div>
 
-                                <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">
-                                    <p className="text-sm text-primary-cream">
-                                        <strong>Note:</strong> Gallery images are currently managed through the theme assets. Contact developers to change specific background images.
-                                    </p>
+                                <div className="space-y-4 pt-4 border-t border-gray-800">
+                                    <div className="flex justify-between items-center">
+                                        <h4 className="font-semibold text-white">Gallery Images</h4>
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const input = document.createElement('input');
+                                                    input.type = 'file';
+                                                    input.accept = 'image/*';
+                                                    input.onchange = async (e) => {
+                                                        const file = e.target.files[0];
+                                                        if (!file) return;
+                                                        const formData = new FormData();
+                                                        formData.append('image', file);
+                                                        try {
+                                                            const res = await api.post('/upload', formData);
+                                                            handleGalleryUpload(res.data.filePath);
+                                                        } catch (err) {
+                                                            alert('Upload failed');
+                                                        }
+                                                    };
+                                                    input.click();
+                                                }}
+                                                className="btn-primary text-xs py-1.5 px-3 flex items-center gap-1"
+                                            >
+                                                <Plus size={14} /> Add Image
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                        {localContent.gallery?.images?.map((img, idx) => (
+                                            <div key={idx} className="relative group aspect-square rounded-lg overflow-hidden border border-gray-700 bg-dark">
+                                                <img src={getImageUrl(img)} alt={`Gallery ${idx}`} className="w-full h-full object-cover" />
+                                                <button
+                                                    onClick={() => removeGalleryImage(idx)}
+                                                    className="absolute top-1 right-1 p-1 bg-red-500 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                                >
+                                                    <X size={12} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         )}
