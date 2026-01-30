@@ -12,10 +12,22 @@ const OfferPopup = () => {
         api.get('/offers/active')
             .then(res => {
                 if (res.data && res.data.length > 0) {
-                    // Show the most recent active offer
-                    setOffer(res.data[0]);
-                    // Delay opening slightly for effect
-                    setTimeout(() => setIsOpen(true), 2000);
+                    // Filter for Homepage Popup and Sort by Priority (High > Medium > Low)
+                    const priorityMap = { 'High': 3, 'Medium': 2, 'Low': 1 };
+
+                    const popupOffers = res.data.filter(o =>
+                        o.displayLocation && o.displayLocation.includes('Homepage Popup')
+                    ).sort((a, b) => {
+                        const pA = priorityMap[a.priority] || 0;
+                        const pB = priorityMap[b.priority] || 0;
+                        return pB - pA; // Descending
+                    });
+
+                    if (popupOffers.length > 0) {
+                        setOffer(popupOffers[0]);
+                        // Delay opening slightly for effect
+                        setTimeout(() => setIsOpen(true), 2000);
+                    }
                 }
             })
             .catch(err => console.error('Error fetching offers:', err));
@@ -23,6 +35,14 @@ const OfferPopup = () => {
 
     const handleClose = () => {
         setIsOpen(false);
+    };
+
+    const handleClaim = () => {
+        if (offer.redirectLink) {
+            window.location.href = offer.redirectLink;
+        } else {
+            handleClose();
+        }
     };
 
     if (!offer || !isOpen) return null;
@@ -36,7 +56,7 @@ const OfferPopup = () => {
             ></div>
 
             {/* Popup Content */}
-            <div className="relative bg-primary-black border border-primary-orange rounded-2xl overflow-hidden max-w-md w-full shadow-2xl transform transition-all animate-popup">
+            <div className="relative bg-primary-black border border-primary text-center rounded-2xl overflow-hidden max-w-md w-full shadow-2xl transform transition-all animate-popup">
                 <button
                     onClick={handleClose}
                     className="absolute top-2 right-2 text-white bg-black/50 rounded-full p-2 hover:bg-white/20 transition-colors z-10"
@@ -51,6 +71,11 @@ const OfferPopup = () => {
                         className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-primary-black to-transparent"></div>
+                    {offer.category && (
+                        <div className="absolute bottom-4 left-4 bg-primary text-white text-xs font-bold px-2 py-1 rounded">
+                            {offer.category}
+                        </div>
+                    )}
                 </div>
 
                 <div className="p-6 text-center">
@@ -61,10 +86,10 @@ const OfferPopup = () => {
                         {offer.description}
                     </p>
                     <button
-                        onClick={handleClose}
-                        className="btn-primary w-full"
+                        onClick={handleClaim}
+                        className="btn-primary w-full font-bold py-3"
                     >
-                        Claim Offer
+                        {offer.buttonText || 'Claim Offer'}
                     </button>
                 </div>
             </div>
