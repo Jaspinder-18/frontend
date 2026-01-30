@@ -286,7 +286,9 @@ const Home = () => {
                         {dish.name}
                       </h3>
                       <p className="text-primary-orange font-semibold text-xl">
-                        ₹{dish.price}
+                        {dish.variants && dish.variants.length > 0
+                          ? `₹${dish.variants[0].price}+`
+                          : `₹${dish.price}`}
                       </p>
                     </div>
                   </div>
