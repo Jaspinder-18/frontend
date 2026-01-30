@@ -143,14 +143,15 @@ const MenuManager = () => {
                         </div>
                     </div>
 
-                    <div className="flex-1 min-w-0 bg-dark-card/50">
-                        <div className="flex items-center h-full">
-                            <div className="flex gap-2 w-full overflow-x-auto px-4 py-4 custom-scrollbar scroll-smooth">
+                    {/* Category Filter Section - Strict width enforcement */}
+                    <div className="flex-1 min-w-0 bg-dark-card/50 max-w-full overflow-hidden">
+                        <div className="flex items-center h-full max-w-[calc(100vw-280px)] lg:max-w-[calc(100vw-360px)]">
+                            <div className="flex gap-3 w-full overflow-x-auto px-6 py-5 custom-scrollbar scroll-smooth">
                                 <button
                                     onClick={() => setFilterCategory('All')}
                                     className={`px-6 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all duration-300 ${filterCategory === 'All'
-                                            ? 'bg-primary text-white shadow-lg shadow-primary/30'
-                                            : 'bg-dark-lighter text-gray-400 hover:text-white hover:bg-dark-light ring-1 ring-gray-700/50'
+                                        ? 'bg-primary text-white shadow-lg shadow-primary/30'
+                                        : 'bg-dark-lighter text-gray-400 hover:text-white hover:bg-dark-light ring-1 ring-gray-700/50'
                                         }`}
                                 >
                                     All Items
@@ -160,8 +161,8 @@ const MenuManager = () => {
                                         key={cat._id}
                                         onClick={() => setFilterCategory(cat.displayName)}
                                         className={`px-6 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all duration-300 ${filterCategory === cat.displayName
-                                                ? 'bg-primary text-white shadow-lg shadow-primary/30'
-                                                : 'bg-dark-lighter text-gray-400 hover:text-white hover:bg-dark-light ring-1 ring-gray-700/50'
+                                            ? 'bg-primary text-white shadow-lg shadow-primary/30'
+                                            : 'bg-dark-lighter text-gray-400 hover:text-white hover:bg-dark-light ring-1 ring-gray-700/50'
                                             }`}
                                     >
                                         {cat.displayName}
