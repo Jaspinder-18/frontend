@@ -54,6 +54,11 @@ const DEFAULT_CONTENT = {
         facebook: '',
         instagram: '',
         twitter: ''
+    },
+    menu: {
+        title: 'Our',
+        subtitle: 'Menu',
+        description: 'Explore our delicious selection of authentic dishes from North Indian, Punjabi, Chinese, and Fast Food cuisines.'
     }
 };
 
@@ -74,6 +79,7 @@ export const ContentProvider = ({ children }) => {
                     gallery: { ...prev.gallery, ...(res.data.gallery || {}) },
                     contact: { ...prev.contact, ...(res.data.contact || {}) },
                     socialLinks: { ...prev.socialLinks, ...(res.data.socialLinks || {}) },
+                    menu: { ...prev.menu, ...(res.data.menu || {}) },
                 }));
             }
             setLoading(false);

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useContent } from '../context/ContentContext';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useCart } from '../context/CartContext';
@@ -24,6 +25,7 @@ const getImageUrl = (imagePath) => {
 };
 
 const Menu = () => {
+  const { get } = useContent();
   const { addToCart } = useCart();
   const [menuItems, setMenuItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
@@ -153,10 +155,10 @@ const Menu = () => {
         <div className="container-custom">
           <div ref={headerRef} className="text-center mb-12">
             <h1 className="text-5xl md:text-6xl font-display font-bold mb-4">
-              Our <span className="text-gradient">Menu</span>
+              {get('menu', 'title')} <span className="text-gradient">{get('menu', 'subtitle')}</span>
             </h1>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Explore our delicious selection of authentic dishes from North Indian, Punjabi, Chinese, and Fast Food cuisines.
+              {get('menu', 'description')}
             </p>
           </div>
 

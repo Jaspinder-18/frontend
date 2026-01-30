@@ -39,16 +39,27 @@ const Footer = () => {
               Eat & Out
             </h3>
             <p className="text-gray-400 leading-relaxed">
-              Experience the finest culinary journey with sustainable ingredients and premium service.
+              {get('home', 'heroSubtitle') || 'Experience the finest culinary journey with sustainable ingredients and premium service.'}
             </p>
             <div className="flex space-x-4">
-              {/* Social placeholders */}
-              {['facebook', 'instagram', 'twitter'].map(social => (
-                <a key={social} href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary hover:text-dark transition-all duration-300">
-                  <span className="sr-only">{social}</span>
+              {get('socialLinks', 'facebook') && (
+                <a href={`https://facebook.com/${get('socialLinks', 'facebook')}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary hover:text-dark transition-all duration-300">
+                  <span className="sr-only">Facebook</span>
                   <div className="w-4 h-4 bg-current" />
                 </a>
-              ))}
+              )}
+              {get('socialLinks', 'instagram') && (
+                <a href={`https://instagram.com/${get('socialLinks', 'instagram')}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary hover:text-dark transition-all duration-300">
+                  <span className="sr-only">Instagram</span>
+                  <div className="w-4 h-4 bg-current" />
+                </a>
+              )}
+              {get('socialLinks', 'twitter') && (
+                <a href={`https://twitter.com/${get('socialLinks', 'twitter')}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary hover:text-dark transition-all duration-300">
+                  <span className="sr-only">Twitter</span>
+                  <div className="w-4 h-4 bg-current" />
+                </a>
+              )}
             </div>
           </motion.div>
 
@@ -77,18 +88,19 @@ const Footer = () => {
               <p className="flex items-start">
                 <span className="text-primary mr-3 mt-1">📍</span>
                 <span>
-                  {get('contact', 'addressLine1') || '123 Premium Street,'}<br />
-                  {get('contact', 'addressLine2') || 'Gourmet District,'}<br />
-                  {get('contact', 'addressLine3') || 'Mumbai, India'}
+                  {get('contact', 'addressLine1')}<br />
+                  {get('contact', 'addressLine2')}<br />
+                  {get('contact', 'addressLine3')}<br />
+                  {get('contact', 'addressLine4')}
                 </span>
               </p>
               <p className="flex items-center">
                 <span className="text-primary mr-3">📞</span>
-                {get('contact', 'phone') || '+91 98765 43210'}
+                {get('contact', 'phone')}
               </p>
               <p className="flex items-center">
                 <span className="text-primary mr-3">✉️</span>
-                info@eatandout.com
+                {get('contact', 'email')}
               </p>
             </div>
           </motion.div>
