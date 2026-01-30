@@ -128,22 +128,42 @@ const MenuManager = () => {
             </div>
 
             {/* Controls */}
-            <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-dark-card border border-gray-800 p-4 rounded-xl">
-                <div className="relative w-full md:w-64">
+            <div className="flex flex-col lg:flex-row gap-4 justify-between bg-dark-card border border-gray-800 p-4 rounded-xl overflow-hidden">
+                <div className="relative w-full lg:w-72 flex-shrink-0">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                     <input
                         type="text"
                         placeholder="Search Menu..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-dark-lighter border border-gray-700 rounded-lg pl-10 pr-4 py-2 text-white focus:border-primary focus:outline-none"
+                        className="w-full bg-dark-lighter border border-gray-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-primary focus:outline-none transition-all"
                     />
                 </div>
-                <div className="flex gap-2 w-full md:w-auto overflow-x-auto">
-                    <button onClick={() => setFilterCategory('All')} className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${filterCategory === 'All' ? 'bg-primary text-white' : 'bg-dark-lighter text-gray-400'}`}>All</button>
-                    {categories.map(cat => (
-                        <button key={cat._id} onClick={() => setFilterCategory(cat.displayName)} className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${filterCategory === cat.displayName ? 'bg-primary text-white' : 'bg-dark-lighter text-gray-400'}`}>{cat.displayName}</button>
-                    ))}
+
+                <div className="flex-1 min-w-0 flex items-center">
+                    <div className="flex gap-2 w-full overflow-x-auto pb-2 custom-scrollbar scroll-smooth">
+                        <button
+                            onClick={() => setFilterCategory('All')}
+                            className={`px-5 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${filterCategory === 'All'
+                                    ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                                    : 'bg-dark-lighter text-gray-400 hover:text-white hover:bg-dark-light'
+                                }`}
+                        >
+                            All
+                        </button>
+                        {categories.map(cat => (
+                            <button
+                                key={cat._id}
+                                onClick={() => setFilterCategory(cat.displayName)}
+                                className={`px-5 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${filterCategory === cat.displayName
+                                        ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                                        : 'bg-dark-lighter text-gray-400 hover:text-white hover:bg-dark-light'
+                                    }`}
+                            >
+                                {cat.displayName}
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
 
