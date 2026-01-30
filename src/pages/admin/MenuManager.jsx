@@ -128,41 +128,47 @@ const MenuManager = () => {
             </div>
 
             {/* Controls */}
-            <div className="flex flex-col lg:flex-row gap-4 justify-between bg-dark-card border border-gray-800 p-4 rounded-xl overflow-hidden">
-                <div className="relative w-full lg:w-72 flex-shrink-0">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                    <input
-                        type="text"
-                        placeholder="Search Menu..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-dark-lighter border border-gray-700 rounded-lg pl-10 pr-4 py-3 text-white focus:border-primary focus:outline-none transition-all"
-                    />
-                </div>
+            <div className="bg-dark-card border border-gray-800 rounded-xl overflow-hidden shadow-lg mb-8">
+                <div className="flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-gray-800">
+                    <div className="p-4 lg:w-80 flex-shrink-0">
+                        <div className="relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                            <input
+                                type="text"
+                                placeholder="Search items..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full bg-dark-lighter border border-gray-700 rounded-lg pl-10 pr-4 py-2.5 text-white focus:border-primary focus:outline-none transition-all placeholder:text-gray-500"
+                            />
+                        </div>
+                    </div>
 
-                <div className="flex-1 min-w-0 flex items-center">
-                    <div className="flex gap-2 w-full overflow-x-auto pb-2 custom-scrollbar scroll-smooth">
-                        <button
-                            onClick={() => setFilterCategory('All')}
-                            className={`px-5 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${filterCategory === 'All'
-                                    ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                                    : 'bg-dark-lighter text-gray-400 hover:text-white hover:bg-dark-light'
-                                }`}
-                        >
-                            All
-                        </button>
-                        {categories.map(cat => (
-                            <button
-                                key={cat._id}
-                                onClick={() => setFilterCategory(cat.displayName)}
-                                className={`px-5 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${filterCategory === cat.displayName
-                                        ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                                        : 'bg-dark-lighter text-gray-400 hover:text-white hover:bg-dark-light'
-                                    }`}
-                            >
-                                {cat.displayName}
-                            </button>
-                        ))}
+                    <div className="flex-1 min-w-0 bg-dark-card/50">
+                        <div className="flex items-center h-full">
+                            <div className="flex gap-2 w-full overflow-x-auto px-4 py-4 custom-scrollbar scroll-smooth">
+                                <button
+                                    onClick={() => setFilterCategory('All')}
+                                    className={`px-6 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all duration-300 ${filterCategory === 'All'
+                                            ? 'bg-primary text-white shadow-lg shadow-primary/30'
+                                            : 'bg-dark-lighter text-gray-400 hover:text-white hover:bg-dark-light ring-1 ring-gray-700/50'
+                                        }`}
+                                >
+                                    All Items
+                                </button>
+                                {categories.map(cat => (
+                                    <button
+                                        key={cat._id}
+                                        onClick={() => setFilterCategory(cat.displayName)}
+                                        className={`px-6 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all duration-300 ${filterCategory === cat.displayName
+                                                ? 'bg-primary text-white shadow-lg shadow-primary/30'
+                                                : 'bg-dark-lighter text-gray-400 hover:text-white hover:bg-dark-light ring-1 ring-gray-700/50'
+                                            }`}
+                                    >
+                                        {cat.displayName}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
