@@ -20,35 +20,47 @@ export const CartProvider = ({ children }) => {
         localStorage.setItem('eatandout_cart', JSON.stringify(cart));
     }, [cart]);
 
-    const addToCart = (item) => {
+    const addToCart = (item, selectedVariant = null) => {
         setCart((prevCart) => {
-            const existingItem = prevCart.find((cartItem) => cartItem._id === item._id);
+            const itemKey = selectedVariant ? `${item._id}-${selectedVariant.name}` : item._id;
+            const existingItem = prevCart.find((cartItem) => {
+                const cartItemKey = cartItem.selectedVariant ? `${cartItem._id}-${cartItem.selectedVariant.name}` : cartItem._id;
+                return cartItemKey === itemKey;
+            });
+
+            const itemPrice = selectedVariant ? selectedVariant.price : item.price;
+
             if (existingItem) {
-                return prevCart.map((cartItem) =>
-                    cartItem._id === item._id
+                return prevCart.map((cartItem) => {
+                    const cartItemKey = cartItem.selectedVariant ? `${cartItem._id}-${cartItem.selectedVariant.name}` : cartItem._id;
+                    return cartItemKey === itemKey
                         ? { ...cartItem, quantity: cartItem.quantity + 1 }
-                        : cartItem
-                );
+                        : cartItem;
+                });
             } else {
-                return [...prevCart, { ...item, quantity: 1 }];
+                return [...prevCart, { ...item, quantity: 1, selectedVariant, price: itemPrice }];
             }
         });
         setIsCartOpen(true);
     };
 
-    const removeFromCart = (itemId) => {
-        setCart((prevCart) => prevCart.filter((item) => item._id !== itemId));
+    const removeFromCart = (itemKey) => {
+        setCart((prevCart) => prevCart.filter((item) => {
+            const currentKey = item.selectedVariant ? `${item._id}-${item.selectedVariant.name}` : item._id;
+            return currentKey !== itemKey;
+        }));
     };
 
-    const updateQuantity = (itemId, newQuantity) => {
+    const updateQuantity = (itemKey, newQuantity) => {
         if (newQuantity < 1) {
-            removeFromCart(itemId);
+            removeFromCart(itemKey);
             return;
         }
         setCart((prevCart) =>
-            prevCart.map((item) =>
-                item._id === itemId ? { ...item, quantity: newQuantity } : item
-            )
+            prevCart.map((item) => {
+                const currentKey = item.selectedVariant ? `${item._id}-${item.selectedVariant.name}` : item._id;
+                return currentKey === itemKey ? { ...item, quantity: newQuantity } : item;
+            })
         );
     };
 
@@ -56,7 +68,7 @@ export const CartProvider = ({ children }) => {
         setCart([]);
     };
 
-    const cartTotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    const cartTotal = cart.reduce((total, item) => total + (item.selectedVariant ? item.selectedVariant.price : item.price) * item.quantity, 0);
     const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
 
     const toggleCart = () => setIsCartOpen(!isCartOpen);

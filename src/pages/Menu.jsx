@@ -24,6 +24,89 @@ const getImageUrl = (imagePath) => {
   return `${domain}${imagePath}`;
 };
 
+const MenuItemCard = ({ item, addToCart }) => {
+  const hasVariants = item.variants && item.variants.length > 0;
+  const [selectedVariant, setSelectedVariant] = useState(hasVariants ? item.variants[0] : null);
+
+  const currentPrice = selectedVariant ? selectedVariant.price : item.price;
+
+  return (
+    <div className="group bg-primary-black rounded-xl sm:rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+      <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
+        {item.image ? (
+          <img
+            src={getImageUrl(item.image)}
+            alt={item.name}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-primary-orange to-primary-red flex items-center justify-center">
+            <span className="text-6xl">🍽️</span>
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute top-4 right-4">
+          <span className="px-3 py-1 bg-primary-orange/90 text-white rounded-full text-sm font-semibold">
+            ₹{currentPrice}
+          </span>
+        </div>
+      </div>
+      <div className="p-6">
+        <div className="flex items-start justify-between mb-2">
+          <h3 className="text-2xl font-display font-bold text-white group-hover:text-primary-orange transition-colors">
+            {item.name}
+          </h3>
+        </div>
+        <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+          {item.description}
+        </p>
+
+        {hasVariants && (
+          <div className="mb-4">
+            <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-2 font-bold">Select Size:</p>
+            <div className="flex gap-2">
+              {item.variants.map((variant, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setSelectedVariant(variant)}
+                  className={`px-3 py-1 text-xs rounded-lg border transition-all ${selectedVariant?.name === variant.name
+                      ? 'bg-primary text-dark border-primary font-bold'
+                      : 'border-gray-700 text-gray-400 hover:border-gray-500'
+                    }`}
+                >
+                  {variant.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="flex items-center justify-between">
+          <span className="px-3 py-1 bg-primary-orange/20 text-primary-orange rounded-full text-xs font-medium">
+            {item.category}
+          </span>
+          <div className="flex items-center gap-2">
+            {item.featured && (
+              <span className="px-3 py-1 bg-primary-red/20 text-primary-red rounded-full text-xs font-medium">
+                ⭐ Featured
+              </span>
+            )}
+            <button
+              onClick={() => addToCart(item, selectedVariant)}
+              className="p-2 bg-primary rounded-full text-dark hover:bg-primary-light transition-colors transform active:scale-95"
+              title="Add to Cart"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Menu = () => {
   const { get } = useContent();
   const { addToCart } = useCart();
@@ -201,61 +284,7 @@ const Menu = () => {
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
             >
               {filteredItems.map((item) => (
-                <div
-                  key={item._id}
-                  className="group bg-primary-black rounded-xl sm:rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
-                >
-                  <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
-                    {item.image ? (
-                      <img
-                        src={getImageUrl(item.image)}
-                        alt={item.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-primary-orange to-primary-red flex items-center justify-center">
-                        <span className="text-6xl">🍽️</span>
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div className="absolute top-4 right-4">
-                      <span className="px-3 py-1 bg-primary-orange/90 text-white rounded-full text-sm font-semibold">
-                        ₹{item.price}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="text-2xl font-display font-bold text-white group-hover:text-primary-orange transition-colors">
-                        {item.name}
-                      </h3>
-                    </div>
-                    <p className="text-gray-400 text-sm mb-4 line-clamp-2">
-                      {item.description}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="px-3 py-1 bg-primary-orange/20 text-primary-orange rounded-full text-xs font-medium">
-                        {item.category}
-                      </span>
-                      <div className="flex items-center gap-2">
-                        {item.featured && (
-                          <span className="px-3 py-1 bg-primary-red/20 text-primary-red rounded-full text-xs font-medium">
-                            ⭐ Featured
-                          </span>
-                        )}
-                        <button
-                          onClick={() => addToCart(item)}
-                          className="p-2 bg-primary rounded-full text-dark hover:bg-primary-light transition-colors transform active:scale-95"
-                          title="Add to Cart"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <MenuItemCard key={item._id} item={item} addToCart={addToCart} />
               ))}
             </div>
           ) : (

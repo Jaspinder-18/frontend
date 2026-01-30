@@ -216,7 +216,11 @@ const MenuManager = () => {
                         <div className="p-4">
                             <div className="flex justify-between items-start mb-2">
                                 <h3 className="font-bold text-white text-lg">{item.name}</h3>
-                                <span className="text-primary font-bold">₹{item.price}</span>
+                                <span className="text-primary font-bold">
+                                    {item.variants && item.variants.length > 0
+                                        ? `₹${item.variants[0].price}+`
+                                        : `₹${item.price}`}
+                                </span>
                             </div>
                             <p className="text-gray-400 text-sm line-clamp-2 mb-4">{item.description}</p>
                             <div className="flex justify-between items-center pt-2 border-t border-gray-800">

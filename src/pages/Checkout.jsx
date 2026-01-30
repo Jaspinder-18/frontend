@@ -206,8 +206,8 @@ const Checkout = () => {
                                     <h3 className="text-xl font-display font-bold text-white mb-4">Payment Method</h3>
                                     <div className="grid grid-cols-2 gap-4">
                                         <label className={`cursor-pointer border rounded-xl p-4 flex flex-col items-center gap-2 transition-all ${formData.paymentMethod === 'cod'
-                                                ? 'bg-primary/20 border-primary text-primary'
-                                                : 'bg-dark/50 border-gray-700 text-gray-400 hover:border-gray-500'
+                                            ? 'bg-primary/20 border-primary text-primary'
+                                            : 'bg-dark/50 border-gray-700 text-gray-400 hover:border-gray-500'
                                             }`}>
                                             <input
                                                 type="radio"
@@ -222,8 +222,8 @@ const Checkout = () => {
                                         </label>
 
                                         <label className={`cursor-pointer border rounded-xl p-4 flex flex-col items-center gap-2 transition-all ${formData.paymentMethod === 'online'
-                                                ? 'bg-primary/20 border-primary text-primary'
-                                                : 'bg-dark/50 border-gray-700 text-gray-400 hover:border-gray-500'
+                                            ? 'bg-primary/20 border-primary text-primary'
+                                            : 'bg-dark/50 border-gray-700 text-gray-400 hover:border-gray-500'
                                             }`}>
                                             <input
                                                 type="radio"
@@ -255,28 +255,36 @@ const Checkout = () => {
                         <div className="bg-dark-card rounded-2xl p-6 sm:p-8 border border-white/5">
                             <h2 className="text-2xl font-display font-bold text-white mb-6">Order Summary</h2>
                             <div className="space-y-4 mb-6 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
-                                {cart.map((item) => (
-                                    <div key={item._id} className="flex gap-4 items-center">
-                                        <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-gray-800">
-                                            {item.image ? (
-                                                <img
-                                                    src={getImageUrl(item.image)}
-                                                    alt={item.name}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-xl">🍽️</div>
-                                            )}
-                                        </div>
-                                        <div className="flex-1">
-                                            <div className="flex justify-between">
-                                                <h3 className="font-semibold text-white">{item.name}</h3>
-                                                <span className="text-gray-400 text-sm">x{item.quantity}</span>
+                                {cart.map((item) => {
+                                    const itemKey = item.selectedVariant ? `${item._id}-${item.selectedVariant.name}` : item._id;
+                                    return (
+                                        <div key={itemKey} className="flex gap-4 items-center">
+                                            <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-gray-800">
+                                                {item.image ? (
+                                                    <img
+                                                        src={getImageUrl(item.image)}
+                                                        alt={item.name}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center text-xl">🍽️</div>
+                                                )}
                                             </div>
-                                            <p className="text-primary-orange text-sm font-medium">₹{item.price * item.quantity}</p>
+                                            <div className="flex-1">
+                                                <div className="flex justify-between">
+                                                    <div>
+                                                        <h3 className="font-semibold text-white">{item.name}</h3>
+                                                        {item.selectedVariant && (
+                                                            <p className="text-[10px] text-primary">{item.selectedVariant.name}</p>
+                                                        )}
+                                                    </div>
+                                                    <span className="text-gray-400 text-sm">x{item.quantity}</span>
+                                                </div>
+                                                <p className="text-primary-orange text-sm font-medium">₹{item.price * item.quantity}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
 
                             <div className="space-y-3 pt-6 border-t border-white/10">

@@ -57,48 +57,58 @@ const CartDrawer = () => {
                             </button>
                         </div>
                     ) : (
-                        cart.map((item) => (
-                            <div key={item._id} className="flex gap-4">
-                                <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-800">
-                                    {item.image ? (
-                                        <img
-                                            src={getImageUrl(item.image)}
-                                            alt={item.name}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-2xl">🍽️</div>
-                                    )}
-                                </div>
-                                <div className="flex-1">
-                                    <div className="flex justify-between items-start mb-1">
-                                        <h3 className="font-semibold text-white line-clamp-1">{item.name}</h3>
-                                        <button
-                                            onClick={() => removeFromCart(item._id)}
-                                            className="text-red-500 hover:text-red-400 text-sm"
-                                        >
-                                            Remove
-                                        </button>
+                        cart.map((item) => {
+                            const itemKey = item.selectedVariant ? `${item._id}-${item.selectedVariant.name}` : item._id;
+                            return (
+                                <div key={itemKey} className="flex gap-4">
+                                    <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-800">
+                                        {item.image ? (
+                                            <img
+                                                src={getImageUrl(item.image)}
+                                                alt={item.name}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center text-2xl">🍽️</div>
+                                        )}
                                     </div>
-                                    <p className="text-primary-orange font-medium mb-2">₹{item.price}</p>
-                                    <div className="flex items-center gap-3">
-                                        <button
-                                            onClick={() => updateQuantity(item._id, item.quantity - 1)}
-                                            className="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center hover:bg-gray-600 text-white"
-                                        >
-                                            -
-                                        </button>
-                                        <span className="text-white w-4 text-center">{item.quantity}</span>
-                                        <button
-                                            onClick={() => updateQuantity(item._id, item.quantity + 1)}
-                                            className="w-6 h-6 rounded-full bg-primary text-dark flex items-center justify-center hover:bg-primary-light"
-                                        >
-                                            +
-                                        </button>
+                                    <div className="flex-1">
+                                        <div className="flex justify-between items-start mb-1">
+                                            <div>
+                                                <h3 className="font-semibold text-white line-clamp-1">{item.name}</h3>
+                                                {item.selectedVariant && (
+                                                    <span className="text-[10px] uppercase tracking-wider text-primary border border-primary/30 px-1.5 py-0.5 rounded">
+                                                        {item.selectedVariant.name}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <button
+                                                onClick={() => removeFromCart(itemKey)}
+                                                className="text-red-500 hover:text-red-400 text-sm"
+                                            >
+                                                Remove
+                                            </button>
+                                        </div>
+                                        <p className="text-primary-orange font-medium mb-2">₹{item.price}</p>
+                                        <div className="flex items-center gap-3">
+                                            <button
+                                                onClick={() => updateQuantity(itemKey, item.quantity - 1)}
+                                                className="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center hover:bg-gray-600 text-white"
+                                            >
+                                                -
+                                            </button>
+                                            <span className="text-white w-4 text-center">{item.quantity}</span>
+                                            <button
+                                                onClick={() => updateQuantity(itemKey, item.quantity + 1)}
+                                                className="w-6 h-6 rounded-full bg-primary text-dark flex items-center justify-center hover:bg-primary-light"
+                                            >
+                                                +
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))
+                            );
+                        })
                     )}
                 </div>
 
