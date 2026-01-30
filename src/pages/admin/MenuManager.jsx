@@ -148,11 +148,10 @@ const MenuManager = () => {
                         <div className="space-y-1 max-h-[60vh] overflow-y-auto custom-scrollbar pr-1">
                             <button
                                 onClick={() => setFilterCategory('All')}
-                                className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-between group \${
-                                    filterCategory === 'All'
-                                    ? 'bg-primary/20 text-primary border-r-4 border-primary'
-                                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
-                                }`}
+                                className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-between group ${filterCategory === 'All'
+                                        ? 'bg-primary/20 text-primary border-r-4 border-primary'
+                                        : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                                    }`}
                             >
                                 All Items
                                 {filterCategory === 'All' && <div className="w-1.5 h-1.5 rounded-full bg-primary" />}
@@ -161,11 +160,10 @@ const MenuManager = () => {
                                 <button
                                     key={cat._id}
                                     onClick={() => setFilterCategory(cat.displayName)}
-                                    className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-between group \${
-                                        filterCategory === cat.displayName
+                                    className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-between group ${filterCategory === cat.displayName
                                         ? 'bg-primary/20 text-primary border-r-4 border-primary'
                                         : 'text-gray-400 hover:bg-white/5 hover:text-white'
-                                    }`}
+                                        }`}
                                 >
                                     <span className="truncate pr-2">{cat.displayName}</span>
                                     {filterCategory === cat.displayName && <div className="w-1.5 h-1.5 rounded-full bg-primary" />}
@@ -192,7 +190,7 @@ const MenuManager = () => {
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
                             <input
                                 type="text"
-                                placeholder={`Search in \${filterCategory === 'All' ? 'Menu' : filterCategory}...`}
+                                placeholder={`Search in ${filterCategory === 'All' ? 'Menu' : filterCategory}...`}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="w-full bg-dark-card border border-gray-800 rounded-xl pl-12 pr-4 py-3 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all shadow-lg"
@@ -305,8 +303,8 @@ const MenuManager = () => {
                                         <div className="text-right flex-shrink-0">
                                             <span className="text-primary font-black text-lg">
                                                 {item.variants && item.variants.length > 0
-                                                    ? `₹\${item.variants[0].price}+`
-                                                    : `₹\${item.price}`}
+                                                    ? `₹${item.variants[0].price}+`
+                                                    : `₹${item.price}`}
                                             </span>
                                         </div>
                                     </div>
